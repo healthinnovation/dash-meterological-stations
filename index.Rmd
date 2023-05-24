@@ -1,0 +1,76 @@
+---
+title: "Meteorological Station on the Iquitos - Nauta road 🎏"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    logo: https://user-images.githubusercontent.com/39299104/207467842-d92416da-c312-4a9c-9cbf-a23a93da6465.png
+    favicon: https://raw.githubusercontent.com/healthinnovation/innovar/gh-pages/favicon.ico
+    css: innova.css
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(leaflet)
+library(echarts4r)
+library(quantmod)
+library(sf)
+library(leafpop)
+getSymbols("GS") #Goldman Sachs
+GS <- as.data.frame(GS)
+GS$date <- row.names(GS)
+station <- read_sf("resources/metheorological_station_location.gpkg") |> 
+  st_cast("POINT")
+```
+
+Column 
+-----------------------------------------------------------------------
+
+### Chart A {data-width=1160}
+
+```{r,  out.height=100}
+leaflet() |> 
+  addProviderTiles(provider = providers$CartoDB) |> 
+  addMarkers(data = station,icon = iconList("Meteorological station" = makeIcon("https://raw.githubusercontent.com/ambarja/utilsUPCH/main/estacion_meteorologica.svg",iconWidth = 20,iconHeight = 20)),popup = station$nombre) |> 
+  setView(lng =-73.36719,lat =  -4.01359,zoom = 9)
+```
+
+### Chart B
+
+```{r}
+GS |> 
+  e_charts(date) |> 
+  e_candle(GS.Open, GS.Close, GS.Low, GS.High, name = "Goldman Sachs") |> 
+  e_title("Candlestick chart", "Quantmod data")
+```
+
+Column 
+-----------------------------------------------------------------------
+
+### Chart C
+
+```{r,  out.height=100}
+GS |> 
+  e_charts(date) |> 
+  e_candle(GS.Open, GS.Close, GS.Low, GS.High, name = "Goldman Sachs") |> 
+  e_title("Candlestick chart", "Quantmod data")
+```
+
+### Chart D
+
+```{r, out.height="100%"}
+GS |> 
+  e_charts(date) |> 
+  e_candle(GS.Open, GS.Close, GS.Low, GS.High, name = "Goldman Sachs") |> 
+  e_title("Candlestick chart", "Quantmod data")
+```
+
+### Chart E
+
+```{r}
+GS |> 
+  e_charts(date) |> 
+  e_candle(GS.Open, GS.Close, GS.Low, GS.High, name = "Goldman Sachs") |> 
+  e_title("Candlestick chart", "Quantmod data")
+```
+
